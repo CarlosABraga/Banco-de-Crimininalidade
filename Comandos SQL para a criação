@@ -1,0 +1,215 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema MMD_Criminalidade
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `MMD_Criminalidade` ;
+
+-- -----------------------------------------------------
+-- Schema MMD_Criminalidade
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `MMD_Criminalidade` DEFAULT CHARACTER SET utf8 ;
+USE `MMD_Criminalidade` ;
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimSexo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimSexo` (
+  `idSexo` INT NOT NULL,
+  `DeSexo` VARCHAR(45) NULL,
+  PRIMARY KEY (`idSexo`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimUF`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimUF` (
+  `idDimUF` INT NOT NULL,
+  `DeUF` VARCHAR(45) NULL,
+  PRIMARY KEY (`idDimUF`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimIDHMUF`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimIDHMUF` (
+  `idIDHMDUF` INT NOT NULL,
+  `Posicao` VARCHAR(45) NULL,
+  PRIMARY KEY (`idIDHMDUF`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimIDHM`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimIDHM` (
+  `IdIDHM` INT NOT NULL,
+  `Posicao` SMALLINT NULL,
+  `UFIDHM` VARCHAR(45) NULL,
+  PRIMARY KEY (`IdIDHM`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimIDHMLongevidade`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimIDHMLongevidade` (
+  `IdIDHMLongevidade` INT NOT NULL,
+  `Posicao` SMALLINT NULL,
+  `UFLongevidade` VARCHAR(45) NULL,
+  PRIMARY KEY (`IdIDHMLongevidade`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimiIDHMRenda`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimiIDHMRenda` (
+  `IdIDHMRenda` INT NOT NULL,
+  `Posicao` SMALLINT NULL,
+  `UfRenda` VARCHAR(45) NULL,
+  PRIMARY KEY (`IdIDHMRenda`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimIDHMEducacao`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimIDHMEducacao` (
+  `IdIDHMEducacao` INT NOT NULL,
+  `Posicao` SMALLINT NULL,
+  `UFEducacao` VARCHAR(2) NULL,
+  PRIMARY KEY (`IdIDHMEducacao`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimTipoCrime`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimTipoCrime` (
+  `idTipoCrime` INT NOT NULL,
+  `DeTipoCrime` VARCHAR(45) NULL,
+  PRIMARY KEY (`idTipoCrime`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimCategoriadoCrime`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimCategoriadoCrime` (
+  `IdDimCategoriadoCrime` INT NOT NULL,
+  `DeCategoriaCrime` VARCHAR(3) NULL,
+  PRIMARY KEY (`IdDimCategoriadoCrime`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`DimTempo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`DimTempo` (
+  `IdTempo` INT NOT NULL,
+  `Ano` SMALLINT NULL,
+  `Mes` SMALLINT NULL,
+  PRIMARY KEY (`IdTempo`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MMD_Criminalidade`.`FatoCrime`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MMD_Criminalidade`.`FatoCrime` (
+  `idSexo` INT NOT NULL,
+  `IdTempo` INT NOT NULL,
+  `idUF` INT NOT NULL,
+  `idDimUF` INT NOT NULL,
+  `IdIDHM` INT NOT NULL,
+  `IdLongevidade` INT NOT NULL,
+  `IdRenda` INT NOT NULL,
+  `IdEducacao` INT NOT NULL,
+  `Ocorrencias` INT NULL,
+  `idTipoCrime` INT NOT NULL,
+  `IdDimCategoriadoCrime` INT NOT NULL,
+  `IdTempo1` INT NOT NULL,
+  PRIMARY KEY (`idSexo`, `IdTempo`, `idUF`, `idDimUF`, `IdIDHM`, `IdLongevidade`, `IdRenda`, `IdEducacao`, `idTipoCrime`, `IdDimCategoriadoCrime`, `IdTempo1`),
+  CONSTRAINT `fk_Fato Crime_DimSexo`
+    FOREIGN KEY (`idSexo`)
+    REFERENCES `MMD_Criminalidade`.`DimSexo` (`idSexo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Fato Crime_UF1`
+    FOREIGN KEY (`idUF`)
+    REFERENCES `MMD_Criminalidade`.`DimUF` (`idDimUF`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Fato Crime_DimUF1`
+    FOREIGN KEY (`idDimUF`)
+    REFERENCES `MMD_Criminalidade`.`DimIDHMUF` (`idIDHMDUF`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Fato Crime_DimIDHM1`
+    FOREIGN KEY (`IdIDHM`)
+    REFERENCES `MMD_Criminalidade`.`DimIDHM` (`IdIDHM`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Fato Crime_DimLongevidade1`
+    FOREIGN KEY (`IdLongevidade`)
+    REFERENCES `MMD_Criminalidade`.`DimIDHMLongevidade` (`IdIDHMLongevidade`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Fato Crime_DimRenda1`
+    FOREIGN KEY (`IdRenda`)
+    REFERENCES `MMD_Criminalidade`.`DimiIDHMRenda` (`IdIDHMRenda`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Fato Crime_DimEducação1`
+    FOREIGN KEY (`IdEducacao`)
+    REFERENCES `MMD_Criminalidade`.`DimIDHMEducacao` (`IdIDHMEducacao`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Fato Crime_DimTipoCrime1`
+    FOREIGN KEY (`idTipoCrime`)
+    REFERENCES `MMD_Criminalidade`.`DimTipoCrime` (`idTipoCrime`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_FatoCrime_DimCategoriadoCrime1`
+    FOREIGN KEY (`IdDimCategoriadoCrime`)
+    REFERENCES `MMD_Criminalidade`.`DimCategoriadoCrime` (`IdDimCategoriadoCrime`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_FatoCrime_DimTempo1`
+    FOREIGN KEY (`IdTempo1`)
+    REFERENCES `MMD_Criminalidade`.`DimTempo` (`IdTempo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_Fato Crime_DimSexo_idx` ON `MMD_Criminalidade`.`FatoCrime` (`idSexo` ASC) VISIBLE;
+
+CREATE INDEX `fk_Fato Crime_UF1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`idUF` ASC) VISIBLE;
+
+CREATE INDEX `fk_Fato Crime_DimUF1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`idDimUF` ASC) VISIBLE;
+
+CREATE INDEX `fk_Fato Crime_DimIDHM1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`IdIDHM` ASC) VISIBLE;
+
+CREATE INDEX `fk_Fato Crime_DimLongevidade1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`IdLongevidade` ASC) VISIBLE;
+
+CREATE INDEX `fk_Fato Crime_DimRenda1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`IdRenda` ASC) VISIBLE;
+
+CREATE INDEX `fk_Fato Crime_DimEducação1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`IdEducacao` ASC) VISIBLE;
+
+CREATE INDEX `fk_Fato Crime_DimTipoCrime1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`idTipoCrime` ASC) VISIBLE;
+
+CREATE INDEX `fk_FatoCrime_DimCategoriadoCrime1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`IdDimCategoriadoCrime` ASC) VISIBLE;
+
+CREATE INDEX `fk_FatoCrime_DimTempo1_idx` ON `MMD_Criminalidade`.`FatoCrime` (`IdTempo1` ASC) VISIBLE;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
